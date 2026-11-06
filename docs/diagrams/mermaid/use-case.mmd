@@ -1,0 +1,48 @@
+graph LR
+    subgraph Aktor_Kiri [Aktor Pemilih]
+        M["Mahasiswa (Student / Pemilih)"]
+    end
+
+    subgraph Batas_Sistem [Sistem Smart E-Voting BEM-DPM]
+        UC_Reg["Registrasi"]
+        UC_Rev["Validasi Data KTM (Human Review)"]
+        UC_Login["Login"]
+        UC_Scan["Scan KTM OCR"]
+        UC_Logout["Logout"]
+
+        subgraph Main_Menu ["Main Menu (After Login)"]
+            UC_VC["View Candidates"]
+            UC_VD["View Detail Visi Misi & Program Kerja"]
+            UC_Vote["Vote"]
+            UC_Confirm["Confirm Vote"]
+            UC_Eligible["Check Eligibility"]
+            UC_Countdown["View Countdown"]
+            UC_Status["View Election Status"]
+            UC_Result["View Results (Count Down)"]
+        end
+
+        UC_Manage["Manage Candidates"]
+        UC_Live["Live Count Real-Time"]
+    end
+
+    subgraph Aktor_Kanan [Aktor Panitia]
+        A["Admin KPU-M (Panitia)"]
+    end
+
+    M --- UC_Reg
+    UC_Reg -. "<<include>>" .-> UC_Rev
+    UC_Reg -. "<<extend>>" .-> UC_Login
+    M --- UC_Login
+    M --- UC_Scan
+    M --- UC_Logout
+
+    UC_Login -->|"Masuk ke Menu Utama"| Main_Menu
+
+    UC_VC -. "<<extend>>" .-> UC_VD
+    UC_Vote -. "<<extend>>" .-> UC_Confirm
+    UC_Vote -. "<<include>>" .-> UC_Eligible
+    UC_Status -. "<<extend>>" .-> UC_Result
+
+    A --- UC_Manage
+    A --- UC_Live
+    A --- UC_Rev

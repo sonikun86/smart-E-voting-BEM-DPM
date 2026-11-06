@@ -1,0 +1,16 @@
+flowchart TD
+    Start([Status Awal]) --> PilihMenu[Pilih Menu View Candidates]
+    PilihMenu --> TekanVote[Tekan Tombol Vote pada Paslon]
+    TekanVote --> CheckEligibility[Sistem Jalankan Check Eligibility<br/>Akun Verified & Belum Vote]
+    CheckEligibility --> DecisionEligible{Boleh Memilih?}
+    
+    DecisionEligible -->|Tidak| Peringatan[Peringatan: Hak Pilih Sudah Digunakan<br/>atau Akun Belum Verified]
+    Peringatan --> SelesaiNode([Status Akhir])
+
+    DecisionEligible -->|Ya| TampilModal[Tampilkan Pop-up Confirm Vote]
+    TampilModal --> DecisionYakin{Yakin Memilih?}
+    
+    DecisionYakin -->|Tidak| PilihMenu
+    DecisionYakin -->|Ya| ProsesTransaksi[1. Enkripsi & Simpan Suara Anonim<br/>2. Kunci Status Hak Pilih Mahasiswa<br/>3. Terbitkan Token Resi Vote]
+    ProsesTransaksi --> TampilSukses[Tampilkan Layar Sukses & Resi]
+    TampilSukses --> SelesaiNode
