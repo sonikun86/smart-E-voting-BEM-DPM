@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "KtmOcrOutput",
+  "description": "Skema keluaran data terstruktur dari modul AI OCR Kartu Tanda Mahasiswa",
+  "type": "object",
+  "required": [
+    "nim_terdeteksi",
+    "nama_terdeteksi",
+    "confidence_score",
+    "status_rekomendasi",
+    "is_valid_format"
+  ],
+  "properties": {
+    "nim_terdeteksi": {
+      "type": "string",
+      "pattern": "^[0-9]{8,15}$",
+      "description": "Nomor Induk Mahasiswa yang berhasil diekstrak dari kartu"
+    },
+    "nama_terdeteksi": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 150,
+      "description": "Nama lengkap mahasiswa yang terbaca pada kartu"
+    },
+    "fakultas_terdeteksi": {
+      "type": "string",
+      "description": "Fakultas yang terdeteksi (opsional)"
+    },
+    "program_studi_terdeteksi": {
+      "type": "string",
+      "description": "Program studi yang terdeteksi (opsional)"
+    },
+    "confidence_score": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Skor keyakinan deteksi model AI (ambang batas otomatis: >= 0.85)"
+    },
+    "is_valid_format": {
+      "type": "boolean",
+      "description": "Menunjukkan apakah NIM memiliki panjang dan format valid sesuai pola universitas"
+    },
+    "status_rekomendasi": {
+      "type": "string",
+      "enum": ["AUTO_VERIFIED", "NEEDS_HUMAN_REVIEW"],
+      "description": "Rekomendasi tindakan sistem berdasarkan evaluasi confidence score dan kecocokan teks"
+    },
+    "keterangan_diagnostik": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Catatan diagnostik jika foto miring, bayangan terdeteksi, atau noise tinggi"
+    }
+  },
+  "additionalProperties": false
+}
