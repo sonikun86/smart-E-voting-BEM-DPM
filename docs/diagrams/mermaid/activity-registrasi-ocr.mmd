@@ -1,0 +1,12 @@
+flowchart TD
+    Start([Status Awal]) --> BukaForm[Buka Form Registrasi]
+    BukaForm --> InputData[Input Data Diri & Unggah Foto KTM]
+    InputData --> Ekstraksi[Ekstraksi Data KTM dengan AI OCR]
+    Ekstraksi --> DecisionScore{Skor OCR Valid? >= 85%}
+    
+    DecisionScore -->|Ya| SetVerified[Set Status Akun: Verified]
+    SetVerified --> TampilSukses[Tampilkan Pesan Registrasi Berhasil]
+    TampilSukses --> EndNode([Status Akhir])
+
+    DecisionScore -->|Tidak / Ragu| SetPending[Set Status Akun: Pending<br/>Flagging Human Review]
+    SetPending --> EndNode

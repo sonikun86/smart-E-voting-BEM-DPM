@@ -1,0 +1,105 @@
+erDiagram
+    ADMIN ||--o{ VERIFIKASI_KTM : "melakukan human review"
+    ADMIN ||--o{ KANDIDAT : "mengelola (CRUD)"
+    ADMIN ||--o{ PERIODE_PEMILIHAN : "mengatur jadwal TPS"
+
+    PERIODE_PEMILIHAN ||--|{ KATEGORI_PEMILIHAN : "memiliki"
+    KATEGORI_PEMILIHAN ||--|{ KANDIDAT : "berisi daftar"
+    KATEGORI_PEMILIHAN ||--o{ SUARA : "menerima"
+
+    MAHASISWA ||--|| VERIFIKASI_KTM : "mengunggah data"
+    MAHASISWA ||--o{ RIWAYAT_VOTING : "mencatat hak pilih"
+    
+    KANDIDAT ||--o{ SUARA : "memperoleh"
+    PERIODE_PEMILIHAN ||--o{ RIWAYAT_VOTING : "berlaku pada"
+    KATEGORI_PEMILIHAN ||--o{ RIWAYAT_VOTING : "kategori yang dipilih"
+
+    MAHASISWA {
+        UUID id_mahasiswa PK
+        VARCHAR nim UK
+        VARCHAR nama_lengkap
+        VARCHAR password_hash
+        VARCHAR fakultas
+        VARCHAR program_studi
+        VARCHAR status_verifikasi
+        BOOLEAN status_vote_bem
+        BOOLEAN status_vote_dpm
+        INT gagal_login_count
+        TIMESTAMP lockout_until
+        TIMESTAMP created_at
+    }
+
+    VERIFIKASI_KTM {
+        UUID id_verifikasi PK
+        UUID id_mahasiswa FK
+        VARCHAR foto_ktm_url
+        VARCHAR ocr_nim
+        VARCHAR ocr_nama
+        NUMERIC ocr_confidence
+        VARCHAR status_review
+        TEXT catatan_admin
+        UUID id_admin FK
+        TIMESTAMP verified_at
+        TIMESTAMP created_at
+    }
+
+    ADMIN {
+        UUID id_admin PK
+        VARCHAR username UK
+        VARCHAR nama_admin
+        VARCHAR password_hash
+        VARCHAR role
+        TIMESTAMP created_at
+    }
+
+    PERIODE_PEMILIHAN {
+        UUID id_periode PK
+        VARCHAR nama_periode
+        TIMESTAMP waktu_buka
+        TIMESTAMP waktu_tutup
+        VARCHAR status_periode
+        TIMESTAMP created_at
+    }
+
+    KATEGORI_PEMILIHAN {
+        UUID id_kategori PK
+        UUID id_periode FK
+        VARCHAR kode_kategori
+        VARCHAR nama_kategori
+        TEXT deskripsi
+        TIMESTAMP created_at
+    }
+
+    KANDIDAT {
+        UUID id_kandidat PK
+        UUID id_kategori FK
+        INT nomor_urut
+        VARCHAR nama_ketua
+        VARCHAR nim_ketua
+        VARCHAR nama_wakil
+        VARCHAR nim_wakil
+        VARCHAR foto_url
+        TEXT visi
+        TEXT misi
+        TEXT program_kerja
+        UUID id_admin FK
+        TIMESTAMP updated_at
+    }
+
+    SUARA {
+        UUID id_suara PK "Anonim - Tanpa Mahasiswa ID"
+        UUID id_kategori FK
+        UUID id_kandidat FK
+        VARCHAR token_resi_vote UK
+        TEXT encrypted_ballot
+        TIMESTAMP waktu_vote
+    }
+
+    RIWAYAT_VOTING {
+        UUID id_riwayat PK
+        UUID id_mahasiswa FK
+        UUID id_kategori FK
+        UUID id_periode FK
+        VARCHAR token_resi_vote
+        TIMESTAMP waktu_vote
+    }
